@@ -49,7 +49,7 @@ Download the pre-calculated statistics
 
 ### train
 ```bash
-sh exps/autogan_cifar10.sh
+sh exps/autogan_cifar10_a.sh
 ```
 
 ### test
@@ -66,7 +66,7 @@ python test.py \
 --load_path /path/to/*.pth \
 --exp_name test_autogan_cifar10_a
 ```
-pre-trained models are provided ([Google Drive](https://drive.google.com/drive/folders/1IYDNrKY3m97K3bx_uIzOL6vFmCjGNpYZ?usp=sharing)).
+Pre-trained models are provided ([Google Drive](https://drive.google.com/drive/folders/1IYDNrKY3m97K3bx_uIzOL6vFmCjGNpYZ?usp=sharing)).
 
 ## Citation
 If you find this work is useful to your research, please cite our paper:
