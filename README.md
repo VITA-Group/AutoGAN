@@ -34,6 +34,7 @@ Unconditional image generation on STL-10.
 ## Set-up
 
 ### install libraries:
+python >= 3.6
 ```bash
 pip install -r requirements.txt
 ```
