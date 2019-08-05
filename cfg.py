@@ -137,7 +137,7 @@ def parse_args():
     parser.add_argument(
         '--model',
         type=str,
-        default='sngan_cifar10',
+        default='autogan_cifar10_a',
         help='path of model')
     parser.add_argument('--eval_batch_size', type=int, default=100)
     parser.add_argument('--num_eval_imgs', type=int, default=50000)
