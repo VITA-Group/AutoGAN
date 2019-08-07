@@ -3,7 +3,7 @@ The implementation of **AutoGAN: Neural Architecture Search for Generative Adver
 
 
 ## Introduction
-We've desinged a novel neural architecture search framework for generative adversarial networks (GANs), dubbed AutoGAN. Experiments validate the effectiveness of AutoGAN on the task of unconditional image generation. Specifically, our discovered architectures achieve highly competitive performance on unconditional image generation task of CIFAR-10, which obtains a record FID score of 12.42, a competitive Inception score of 8.55. 
+We've desinged a novel neural architecture search framework for generative adversarial networks (GANs), dubbed AutoGAN. Experiments validate the effectiveness of AutoGAN on the task of unconditional image generation. Specifically, our discovered architectures achieve highly competitive performance on unconditional image generation task of CIFAR-10, which obtains a record FID score of **12.42**, a competitive Inception score of **8.55**. 
 
 **RNN controller:**
 <p align="center">
@@ -82,6 +82,6 @@ year = {2019}
 ```
 
 ## Acknowledgement
-1. <strong>Inception Score</strong> code from [OpenAI's Improved GAN](https://github.com/openai/improved-gan/tree/master/inception_score) (official).
-2. <strong>FID</strong> code and CIFAR-10 statistics file from [https://github.com/bioinf-jku/TTUR](https://github.com/bioinf-jku/TTUR) (official).
+1. Inception Score code from [OpenAI's Improved GAN](https://github.com/openai/improved-gan/tree/master/inception_score) (official).
+2. FID code and CIFAR-10 statistics file from [https://github.com/bioinf-jku/TTUR](https://github.com/bioinf-jku/TTUR) (official).
 
