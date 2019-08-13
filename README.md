@@ -1,5 +1,5 @@
 # AutoGAN: Neural Architecture Search for Generative Adversarial Networks
-The implementation of **AutoGAN: Neural Architecture Search for Generative Adversarial Networks** (paper coming soon). 
+The implementation of [AutoGAN: Neural Architecture Search for Generative Adversarial Networks](https://arxiv.org/abs/1908.03835). 
 
 
 ## Introduction
