@@ -2,6 +2,7 @@ imageio
 scipy
 six
 numpy
+python-dateutil==2.7.3
 tensorboard==1.12.2
 tensorboardX==1.6
 tensorflow-gpu==1.12.0
