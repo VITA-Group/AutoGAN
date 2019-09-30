@@ -2,18 +2,20 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-from tqdm import tqdm
 
+import math
+import os
 import os.path
+import sys
 import tarfile
 
 import numpy as np
-from six.moves import urllib
 import tensorflow as tf
+from six.moves import urllib
+from tqdm import tqdm
 
-import math
-import sys
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 MODEL_DIR = '/tmp/imagenet'
 DATA_URL = 'http://download.tensorflow.org/models/image/imagenet/inception-2015-12-05.tgz'
 softmax = None
@@ -99,4 +101,3 @@ def _init_inception():
         logits = tf.matmul(tf.squeeze(pool3, [1, 2]), w)
         softmax = tf.nn.softmax(logits)
         sess.close()
-

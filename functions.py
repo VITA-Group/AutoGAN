@@ -4,25 +4,25 @@
 # @Link    : None
 # @Version : 0.0
 
+import logging
 import os
+from copy import deepcopy
+
 import numpy as np
 import torch
 import torch.nn as nn
-from torchvision.utils import make_grid
 from imageio import imsave
+from torchvision.utils import make_grid
 from tqdm import tqdm
-from copy import deepcopy
-import logging
 
-from utils.inception_score import get_inception_score
 from utils.fid_score import calculate_fid_given_paths
-
+from utils.inception_score import get_inception_score
 
 logger = logging.getLogger(__name__)
 
 
-def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optimizer, gen_avg_param, train_loader, epoch,
-          writer_dict, schedulers=None):
+def train(args, gen_net: nn.Module, dis_net: nn.Module, gen_optimizer, dis_optimizer, gen_avg_param, train_loader,
+          epoch, writer_dict, schedulers=None):
     writer = writer_dict['writer']
     gen_step = 0
 
@@ -110,7 +110,7 @@ def validate(args, fixed_z, fid_stat, gen_net: nn.Module, writer_dict):
 
     # get fid and inception score
     fid_buffer_dir = os.path.join(args.path_helper['sample_path'], 'fid_buffer')
-    os.makedirs(fid_buffer_dir)
+    os.makedirs(fid_buffer_dir, exist_ok=True)
 
     eval_iter = args.num_eval_imgs // args.eval_batch_size
     img_list = list()
@@ -118,7 +118,8 @@ def validate(args, fixed_z, fid_stat, gen_net: nn.Module, writer_dict):
         z = torch.cuda.FloatTensor(np.random.normal(0, 1, (args.eval_batch_size, args.latent_dim)))
 
         # Generate a batch of images
-        gen_imgs = gen_net(z).mul_(127.5).add_(127.5).clamp_(0.0, 255.0).permute(0, 2, 3, 1).to('cpu', torch.uint8).numpy()
+        gen_imgs = gen_net(z).mul_(127.5).add_(127.5).clamp_(0.0, 255.0).permute(0, 2, 3, 1).to('cpu',
+                                                                                                torch.uint8).numpy()
         for img_idx, img in enumerate(gen_imgs):
             file_name = os.path.join(fid_buffer_dir, f'iter{iter_idx}_b{img_idx}.png')
             imsave(file_name, img)

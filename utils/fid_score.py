@@ -17,13 +17,17 @@ See --help to see further details.
 """
 
 from __future__ import absolute_import, division, print_function
-import numpy as np
+
 import os
-import tensorflow as tf
-from scipy.misc import imread
-from scipy import linalg
 import pathlib
 import warnings
+
+import numpy as np
+import tensorflow as tf
+from scipy import linalg
+from scipy.misc import imread
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 
 class InvalidFIDException(Exception):

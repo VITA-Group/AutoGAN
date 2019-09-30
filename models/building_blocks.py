@@ -38,7 +38,7 @@ class Cell(nn.Module):
         # cross scale skip
         self.skip_in_ops = None
         if num_skip_in:
-            self.skip_in_ops = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernel_size=1) for _ in range(num_skip_in)])
+            self.skip_in_ops = nn.ModuleList([nn.Conv2d(out_channels, out_channels, kernel_size=1) for _ in range(num_skip_in)])
 
     def forward(self, x, skip_ft=None):
         residual = x
