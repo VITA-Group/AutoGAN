@@ -1,5 +1,5 @@
 # AutoGAN: Neural Architecture Search for Generative Adversarial Networks
-The implementation of [AutoGAN: Neural Architecture Search for Generative Adversarial Networks](https://arxiv.org/abs/1908.03835). 
+Code used for [AutoGAN: Neural Architecture Search for Generative Adversarial Networks](https://arxiv.org/abs/1908.03835). 
 
 
 ## Introduction
@@ -33,8 +33,11 @@ Unconditional image generation on STL-10.
 
 ## Set-up
 
-### install libraries:
+### environment requirements:
 python >= 3.6
+
+torch >= 1.1.0 
+
 ```bash
 pip install -r requirements.txt
 ```
