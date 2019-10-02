@@ -25,7 +25,7 @@ import warnings
 import numpy as np
 import tensorflow as tf
 from scipy import linalg
-from scipy.misc import imread
+from imageio import imread
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 

@@ -39,7 +39,7 @@ def main():
     create_inception_graph(inception_path)
 
     # import network
-    gen_net = eval('models.'+args.model+'.Generator')(args=args).cuda()
+    gen_net = eval('models.'+args.gen_model+'.Generator')(args=args).cuda()
 
     # fid stat
     if args.dataset.lower() == 'cifar10':
@@ -72,7 +72,7 @@ def main():
         'writer': SummaryWriter(args.path_helper['log_path']),
         'valid_global_steps': 0,
     }
-    inception_score, fid_score = validate(args, fixed_z, fid_stat, gen_net, writer_dict)
+    inception_score, fid_score = validate(args, fixed_z, fid_stat, gen_net, writer_dict, clean_dir=False)
     logger.info(f'Inception score: {inception_score}, FID score: {fid_score}.')
 
 

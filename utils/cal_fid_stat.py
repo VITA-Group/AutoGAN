@@ -9,7 +9,7 @@ import os
 import glob
 import argparse
 import numpy as np
-from scipy.misc import imread
+from imageio import imread
 import tensorflow as tf
 
 import utils.fid_score as fid

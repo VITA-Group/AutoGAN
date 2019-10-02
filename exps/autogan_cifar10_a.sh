@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-export CUDA_VISIBLE_DEVICES=0
 python train.py \
 -gen_bs 128 \
 -dis_bs 64 \
@@ -8,7 +7,8 @@ python train.py \
 --bottom_width 4 \
 --img_size 32 \
 --max_iter 50000 \
---model autogan_cifar10_a \
+--gen_model autogan_cifar10_a \
+--dis_model autogan_cifar10_a \
 --latent_dim 128 \
 --gf_dim 256 \
 --df_dim 128 \

@@ -51,6 +51,11 @@ def parse_args():
         default=0.0002,
         help='adam: disc learning rate')
     parser.add_argument(
+        '--ctrl_lr',
+        type=float,
+        default=3.5e-4,
+        help='adam: ctrl learning rate')
+    parser.add_argument(
         '--lr_decay',
         action='store_true',
         help='learning rate decay or not')
@@ -97,7 +102,7 @@ def parse_args():
     parser.add_argument(
         '--print_freq',
         type=int,
-        default=50,
+        default=100,
         help='interval between each verbose')
     parser.add_argument(
         '--load_path',
@@ -135,10 +140,20 @@ def parse_args():
     parser.add_argument('--df_dim', type=int, default=64,
                         help='The base channel num of disc')
     parser.add_argument(
-        '--model',
+        '--gen_model',
         type=str,
-        default='autogan_cifar10_a',
-        help='path of model')
+        default='shared_gan',
+        help='path of gen model')
+    parser.add_argument(
+        '--dis_model',
+        type=str,
+        default='shared_gan',
+        help='path of dis model')
+    parser.add_argument(
+        '--controller',
+        type=str,
+        default='controller',
+        help='path of controller')
     parser.add_argument('--eval_batch_size', type=int, default=100)
     parser.add_argument('--num_eval_imgs', type=int, default=50000)
     parser.add_argument(
@@ -147,6 +162,38 @@ def parse_args():
         default=4,
         help="the base resolution of the GAN")
     parser.add_argument('--random_seed', type=int, default=12345)
+
+    # search
+    parser.add_argument('--shared_epoch', type=int, default=15,
+                        help='the number of epoch to train the shared gan at each search iteration')
+    parser.add_argument('--grow_step1', type=int, default=25,
+                        help='which iteration to grow the image size from 8 to 16')
+    parser.add_argument('--grow_step2', type=int, default=55,
+                        help='which iteration to grow the image size from 16 to 32')
+    parser.add_argument('--max_search_iter', type=int, default=90,
+                        help='max search iterations of this algorithm')
+    parser.add_argument('--ctrl_step', type=int, default=30,
+                        help='number of steps to train the controller at each search iteration')
+    parser.add_argument('--ctrl_sample_batch', type=int, default=1,
+                        help='sample size of controller of each step')
+    parser.add_argument('--hid_size', type=int, default=100,
+                        help='the size of hidden vector')
+    parser.add_argument('--baseline_decay', type=float, default=0.9,
+                        help='baseline decay rate in RL')
+    parser.add_argument('--rl_num_eval_img', type=int, default=5000,
+                        help='number of images to be sampled in order to get the reward')
+    parser.add_argument('--num_candidate', type=int, default=10,
+                        help='number of candidate architectures to be sampled')
+    parser.add_argument('--topk', type=int, default=5,
+                        help='preserve topk models architectures after each stage' )
+    parser.add_argument('--entropy_coeff', type=float, default=1e-3,
+                        help='to encourage the exploration')
+    parser.add_argument('--dynamic_reset_threshold', type=float, default=1e-3,
+                        help='var threshold')
+    parser.add_argument('--dynamic_reset_window', type=int, default=500,
+                        help='the window size')
+    parser.add_argument('--arch', nargs='+', type=int,
+                        help='the vector of a discovered architecture')
 
     opt = parser.parse_args()
 

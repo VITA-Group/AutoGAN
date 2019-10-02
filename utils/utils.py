@@ -4,12 +4,15 @@
 # @Link    : None
 # @Version : 0.0
 
-import os
-import torch
-import dateutil.tz
-from datetime import datetime
-import time
+import collections
 import logging
+import math
+import os
+import time
+from datetime import datetime
+
+import dateutil.tz
+import torch
 
 
 def create_logger(log_dir, phase='train'):
@@ -61,3 +64,51 @@ def save_checkpoint(states, is_best, output_dir,
     torch.save(states, os.path.join(output_dir, filename))
     if is_best:
         torch.save(states, os.path.join(output_dir, 'checkpoint_best.pth'))
+
+
+class RunningStats:
+    def __init__(self, WIN_SIZE):
+        self.mean = 0
+        self.run_var = 0
+        self.WIN_SIZE = WIN_SIZE
+
+        self.window = collections.deque(maxlen=WIN_SIZE)
+
+    def clear(self):
+        self.window.clear()
+        self.mean = 0
+        self.run_var = 0
+
+    def is_full(self):
+        return len(self.window) == self.WIN_SIZE
+
+    def push(self, x):
+
+        if len(self.window) == self.WIN_SIZE:
+            # Adjusting variance
+            x_removed = self.window.popleft()
+            self.window.append(x)
+            old_m = self.mean
+            self.mean += (x - x_removed) / self.WIN_SIZE
+            self.run_var += (x + x_removed - old_m - self.mean) * (x - x_removed)
+        else:
+            # Calculating first variance
+            self.window.append(x)
+            delta = x - self.mean
+            self.mean += delta / len(self.window)
+            self.run_var += delta * (x - self.mean)
+
+    def get_mean(self):
+        return self.mean if len(self.window) else 0.0
+
+    def get_var(self):
+        return self.run_var / len(self.window) if len(self.window) > 1 else 0.0
+
+    def get_std(self):
+        return math.sqrt(self.get_var())
+
+    def get_all(self):
+        return list(self.window)
+
+    def __str__(self):
+        return "Current window values: {}".format(list(self.window))
