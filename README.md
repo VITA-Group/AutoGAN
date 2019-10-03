@@ -1,6 +1,8 @@
 # AutoGAN: Neural Architecture Search for Generative Adversarial Networks
 Code used for [AutoGAN: Neural Architecture Search for Generative Adversarial Networks](https://arxiv.org/abs/1908.03835). 
 
+## Updates
+* Oct-02-2019: Search code is released.
 
 ## Introduction
 We've desinged a novel neural architecture search framework for generative adversarial networks (GANs), dubbed AutoGAN. Experiments validate the effectiveness of AutoGAN on the task of unconditional image generation. Specifically, our discovered architectures achieve highly competitive performance on unconditional image generation task of CIFAR-10, which obtains a record FID score of **12.42**, a competitive Inception score of **8.55**. 
