@@ -173,7 +173,7 @@ class Cell(nn.Module):
             raise NotImplementedError(self.norm_type)
 
         # shortcut
-        if self.c_sc:
+        if self.short_cut:
             if self.up_type != 'deconv':
                 final_out += self.c_sc(F.interpolate(x, scale_factor=2, mode=self.up_type))
             else:
