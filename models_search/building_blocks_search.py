@@ -22,12 +22,12 @@ def decimal2binary(n):
 class PreGenBlock(nn.Module):
     def __init__(self, in_channels, out_channels, up_block, ksize=3):
         super(PreGenBlock, self).__init__()
-        self.conv = nn.Conv2d(in_channels, out_channels, ksize, padding=ksize//2)
         self.bn = nn.BatchNorm2d(in_channels)
         self.inn = nn.InstanceNorm2d(in_channels)
         self.up_block = up_block
         self.deconv = nn.ConvTranspose2d(
-            in_channels, out_channels, kernel_size=2, stride=2)
+            in_channels, in_channels, kernel_size=2, stride=2)
+        self.conv = nn.Conv2d(in_channels, out_channels, ksize, padding=ksize//2)
 
     def set_arch(self, up_id, norm_id):
         self.up_type = UP_TYPE[up_id]
@@ -63,12 +63,12 @@ class PreGenBlock(nn.Module):
 class PostGenBlock(nn.Module):
     def __init__(self, in_channels, out_channels, up_block, ksize=3):
         super(PostGenBlock, self).__init__()
+        self.deconv = nn.ConvTranspose2d(
+            in_channels, in_channels, kernel_size=2, stride=2)
         self.conv = nn.Conv2d(in_channels, out_channels, ksize, padding=ksize//2)
         self.bn = nn.BatchNorm2d(out_channels)
         self.inn = nn.InstanceNorm2d(out_channels)
         self.up_block = up_block
-        self.deconv = nn.ConvTranspose2d(
-            in_channels, out_channels, kernel_size=2, stride=2)
 
     def set_arch(self, up_id, norm_id):
         self.up_type = UP_TYPE[up_id]
@@ -110,17 +110,17 @@ class Cell(nn.Module):
         self.pre_conv1 = PreGenBlock(in_channels, out_channels, ksize=ksize, up_block=True)
 
         self.post_conv2 = PostGenBlock(out_channels, out_channels, ksize=ksize, up_block=False)
-        self.pre_conv2 = PreGenBlock(in_channels, out_channels, ksize=ksize, up_block=False)
+        self.pre_conv2 = PreGenBlock(out_channels, out_channels, ksize=ksize, up_block=False)
 
         self.deconv_sc = nn.ConvTranspose2d(
-            in_channels, out_channels, kernel_size=2, stride=2)
+            in_channels, in_channels, kernel_size=2, stride=2)
         self.c_sc = nn.Conv2d(in_channels, out_channels, kernel_size=1)
 
         # skip_in
         self.skip_deconvx2 = nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2, stride=2)
         self.skip_deconvx4 = nn.Sequential(
             nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2, stride=2),
-            nn.ConvTranspose2d(in_channels, out_channels, kernel_size=2, stride=2)
+            nn.ConvTranspose2d(out_channels, out_channels, kernel_size=2, stride=2)
         )
 
         self.num_skip_in = num_skip_in
