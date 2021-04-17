@@ -22,26 +22,41 @@ class Generator(nn.Module):
             nn.BatchNorm2d(args.gf_dim),
             nn.ReLU(),
             nn.Conv2d(args.gf_dim, 3, 3, 1, 1),
-            nn.Tanh()
+            nn.Tanh(),
         )
 
     def set_arch(self, arch_id, cur_stage):
         if not isinstance(arch_id, list):
-            arch_id = arch_id.to('cpu').numpy().tolist()
+            arch_id = arch_id.to("cpu").numpy().tolist()
         arch_id = [int(x) for x in arch_id]
         self.cur_stage = cur_stage
         arch_stage1 = arch_id[:4]
-        self.cell1.set_arch(conv_id=arch_stage1[0], norm_id=arch_stage1[1], up_id=arch_stage1[2],
-                            short_cut_id=arch_stage1[3], skip_ins=[])
+        self.cell1.set_arch(
+            conv_id=arch_stage1[0],
+            norm_id=arch_stage1[1],
+            up_id=arch_stage1[2],
+            short_cut_id=arch_stage1[3],
+            skip_ins=[],
+        )
         if cur_stage >= 1:
             arch_stage2 = arch_id[4:9]
-            self.cell2.set_arch(conv_id=arch_stage2[0], norm_id=arch_stage2[1], up_id=arch_stage2[2],
-                                short_cut_id=arch_stage2[3], skip_ins=arch_stage2[4])
+            self.cell2.set_arch(
+                conv_id=arch_stage2[0],
+                norm_id=arch_stage2[1],
+                up_id=arch_stage2[2],
+                short_cut_id=arch_stage2[3],
+                skip_ins=arch_stage2[4],
+            )
 
         if cur_stage == 2:
             arch_stage3 = arch_id[9:]
-            self.cell3.set_arch(conv_id=arch_stage3[0], norm_id=arch_stage3[1], up_id=arch_stage3[2],
-                                short_cut_id=arch_stage3[3], skip_ins=arch_stage3[4])
+            self.cell3.set_arch(
+                conv_id=arch_stage3[0],
+                norm_id=arch_stage3[1],
+                up_id=arch_stage3[2],
+                short_cut_id=arch_stage3[3],
+                skip_ins=arch_stage3[4],
+            )
 
     def forward(self, z):
         h = self.l1(z).view(-1, self.ch, self.bottom_width, self.bottom_width)
@@ -63,31 +78,14 @@ def _downsample(x):
 
 class OptimizedDisBlock(nn.Module):
     def __init__(
-            self,
-            args,
-            in_channels,
-            out_channels,
-            ksize=3,
-            pad=1,
-            activation=nn.ReLU()):
+        self, args, in_channels, out_channels, ksize=3, pad=1, activation=nn.ReLU()
+    ):
         super(OptimizedDisBlock, self).__init__()
         self.activation = activation
 
-        self.c1 = nn.Conv2d(
-            in_channels,
-            out_channels,
-            kernel_size=ksize,
-            padding=pad)
-        self.c2 = nn.Conv2d(
-            out_channels,
-            out_channels,
-            kernel_size=ksize,
-            padding=pad)
-        self.c_sc = nn.Conv2d(
-            in_channels,
-            out_channels,
-            kernel_size=1,
-            padding=0)
+        self.c1 = nn.Conv2d(in_channels, out_channels, kernel_size=ksize, padding=pad)
+        self.c2 = nn.Conv2d(out_channels, out_channels, kernel_size=ksize, padding=pad)
+        self.c_sc = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0)
         if args.d_spectral_norm:
             self.c1 = nn.utils.spectral_norm(self.c1)
             self.c2 = nn.utils.spectral_norm(self.c2)
@@ -110,15 +108,16 @@ class OptimizedDisBlock(nn.Module):
 
 class DisBlock(nn.Module):
     def __init__(
-            self,
-            args,
-            in_channels,
-            out_channels,
-            hidden_channels=None,
-            ksize=3,
-            pad=1,
-            activation=nn.ReLU(),
-            downsample=False):
+        self,
+        args,
+        in_channels,
+        out_channels,
+        hidden_channels=None,
+        ksize=3,
+        pad=1,
+        activation=nn.ReLU(),
+        downsample=False,
+    ):
         super(DisBlock, self).__init__()
         self.activation = activation
         self.downsample = downsample
@@ -126,25 +125,17 @@ class DisBlock(nn.Module):
         hidden_channels = in_channels if hidden_channels is None else hidden_channels
 
         self.c1 = nn.Conv2d(
-            in_channels,
-            hidden_channels,
-            kernel_size=ksize,
-            padding=pad)
+            in_channels, hidden_channels, kernel_size=ksize, padding=pad
+        )
         self.c2 = nn.Conv2d(
-            hidden_channels,
-            out_channels,
-            kernel_size=ksize,
-            padding=pad)
+            hidden_channels, out_channels, kernel_size=ksize, padding=pad
+        )
         if args.d_spectral_norm:
             self.c1 = nn.utils.spectral_norm(self.c1)
             self.c2 = nn.utils.spectral_norm(self.c2)
 
         if self.learnable_sc:
-            self.c_sc = nn.Conv2d(
-                in_channels,
-                out_channels,
-                kernel_size=1,
-                padding=0)
+            self.c_sc = nn.Conv2d(in_channels, out_channels, kernel_size=1, padding=0)
             if args.d_spectral_norm:
                 self.c_sc = nn.utils.spectral_norm(self.c_sc)
 
@@ -179,23 +170,14 @@ class Discriminator(nn.Module):
         self.activation = activation
         self.block1 = OptimizedDisBlock(args, 3, self.ch)
         self.block2 = DisBlock(
-            args,
-            self.ch,
-            self.ch,
-            activation=activation,
-            downsample=True)
+            args, self.ch, self.ch, activation=activation, downsample=True
+        )
         self.block3 = DisBlock(
-            args,
-            self.ch,
-            self.ch,
-            activation=activation,
-            downsample=False)
+            args, self.ch, self.ch, activation=activation, downsample=False
+        )
         self.block4 = DisBlock(
-            args,
-            self.ch,
-            self.ch,
-            activation=activation,
-            downsample=False)
+            args, self.ch, self.ch, activation=activation, downsample=False
+        )
         self.l5 = nn.Linear(self.ch, 1, bias=False)
         if args.d_spectral_norm:
             self.l5 = nn.utils.spectral_norm(self.l5)
@@ -204,7 +186,7 @@ class Discriminator(nn.Module):
     def forward(self, x):
         h = x
         layers = [self.block1, self.block2, self.block3]
-        variable_model = nn.Sequential(*layers[:(self.cur_stage + 1)])
+        variable_model = nn.Sequential(*layers[: (self.cur_stage + 1)])
         h = variable_model(h)
         h = self.block4(h)
         h = self.activation(h)

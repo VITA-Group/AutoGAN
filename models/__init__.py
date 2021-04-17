@@ -4,9 +4,7 @@
 # @Link    : None
 # @Version : 0.0
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function
 
 import models.autogan_cifar10_a
 import models.autogan_cifar10_b
