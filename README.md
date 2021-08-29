@@ -48,8 +48,7 @@ pip install -r requirements.txt
  ```bash
 mkdir fid_stat
  ```
-Download the pre-calculated statistics
-([Google Drive](https://drive.google.com/drive/folders/1UUQVT2Zj-kW1c2FJOFIdGdlDHA3gFJJd?usp=sharing)) to `./fid_stat`.
+Download the [pre-calculated statistics](http://bioinf.jku.at/research/ttur) to `./fid_stat`.
 
 
 ## How to search & train the derived architecture by yourself
